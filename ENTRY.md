@@ -61,12 +61,26 @@
 
 ## Kit check
 
-- Repo dibuat + push ke GitHub: YA (lihat repo di atas).
-- `check` butuh bundle transkrip (`--transcripts transcripts.tar.gz`); bundle
-  transkrip sesi build ini harus dibuat dari sesi top-level (parent agent) setelah
-  subagent selesai — jadi check penuh dijalankan saat submit, bukan dari run ini.
-- Yang sudah diverifikasi di run ini: gate lokal (panjang/UTF-8), README + 3 badge,
-  LICENSE MIT, GitHub About (website + topic `makefun`), repo dibuat setelah buka.
+- Dijalankan: `node cli/makefun.mjs check --kit . --repo <dev> --transcripts /tmp/transcripts.tar.gz`
+  pada 2026-11-26T04:04:39Z, commit `b9ceedd2570159614916b2caa4d2c57a983fc4ce`.
+- **Hasil: 13 passed, 1 failed, 5 skipped, 5 dicek saat submit.**
+- Yang lolos: competition_open, snapshot, license_osi (MIT), entrypoint (main.py →
+  python3.13), transcripts_present, transcripts_recorded, thinking_wellformed,
+  thinking_in_window, thinking_reproduces (80/83 baris, 96,3%), thinking_turns
+  (20 turn), thinking_revised (main.py ditulis/diedit 2x), transcripts_run_record,
+  thinking_own_work (80/83 baris karya sendiri).
+- **Yang gagal: `thinking_priced` — 0 usage row untuk sesi subagent ini.**
+  Baris token usage sesi subagent baru ditulis Muse setelah run subagent selesai,
+  jadi dari dalam run ini tidak bisa dilengkapi. Ini by design: **parent agent
+  (top-level) harus, setelah run ini selesai, menjalankan ulang SELECT usage
+  (agent_id subagent ini + parent), bundle ulang, lalu check ulang** sebelum submit.
+- Dicek saat submit (belum bisa dicek lokal): repo_public (repo SUDAH public),
+  repo_owner (owner mihawnk-nft = login GitHub akun — diverifikasi saat submit),
+  repo_created_after_open (repo dibuat 2026-11-26T03:58:27Z, setelah buka 03:31:44Z),
+  commit_in_repo (commit sudah di-push), duplicate_snapshot (karya sendiri).
+- Kesimpulan: entry siap untuk submit SETELAH parent agent membuat ulang bundle
+  transkrip (dengan usage rows) dan check ulang lolos. TIDAK ADA yang perlu
+  diubah pada kode/repo.
 
 ## Yang TIDAK dilakukan di run ini
 
